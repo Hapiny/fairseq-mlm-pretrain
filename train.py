@@ -75,7 +75,10 @@ def main(args, init_distributed=False):
     lr = trainer.get_lr()
     train_meter = StopwatchMeter()
     train_meter.start()
-    valid_subsets = args.valid_subset.split(',')
+    valid_subsets = args.valid_subset.split(",")
+    num_save_epochs = list()
+    if args.num_save_epochs:
+        num_save_epochs = [int(n) for n in args.num_save_epochs.split(",")]
     while (
         lr > args.min_lr
         and (epoch_itr.epoch < max_epoch or (epoch_itr.epoch == max_epoch
@@ -94,7 +97,16 @@ def main(args, init_distributed=False):
         lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
 
         # save checkpoint
-        if epoch_itr.epoch % args.save_interval == 0:
+        save_this_epoch = False
+        current_epoch = epoch_itr.epoch
+        if current_epoch == 1:
+            save_this_epoch = True
+        elif num_save_epochs and current_epoch in num_save_epochs:
+            save_this_epoch = True
+        elif current_epoch % args.save_interval == 0:
+            save_this_epoch = True
+
+        if save_this_epoch:
             checkpoint_utils.save_checkpoint(args, trainer, epoch_itr, valid_losses[0])
 
         reload_dataset = ':' in getattr(args, 'data', '')

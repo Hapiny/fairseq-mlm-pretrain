@@ -408,6 +408,8 @@ def add_checkpoint_args(parser):
                        help='metric to use for saving "best" checkpoints')
     group.add_argument('--maximize-best-checkpoint-metric', action='store_true',
                        help='select the largest metric value for saving "best" checkpoints')
+    group.add_argument('--num-save-epochs', type=str,
+                       help='number of particular epochs for saving checkpoints')
     # fmt: on
     return group
 
