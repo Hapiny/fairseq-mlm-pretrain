@@ -79,6 +79,8 @@ def main(args, init_distributed=False):
     num_save_epochs = list()
     if args.num_save_epochs:
         num_save_epochs = [int(n) for n in args.num_save_epochs.split(",")]
+        print("Saving model on epochs:")
+        print(num_save_epochs)
     while (
         lr > args.min_lr
         and (epoch_itr.epoch < max_epoch or (epoch_itr.epoch == max_epoch
@@ -97,15 +99,16 @@ def main(args, init_distributed=False):
         lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
 
         # save checkpoint
-        save_this_epoch = False
         current_epoch = epoch_itr.epoch
         if current_epoch == 1:
             save_this_epoch = True
         elif num_save_epochs and current_epoch in num_save_epochs:
             save_this_epoch = True
-        elif current_epoch % args.save_interval == 0:
+        elif not num_save_epochs and current_epoch % args.save_interval == 0:
             save_this_epoch = True
-
+        else:
+            save_this_epoch = False
+        print(f"Epoch {current_epoch}. Save model: {save_this_epoch}")
         if save_this_epoch:
             checkpoint_utils.save_checkpoint(args, trainer, epoch_itr, valid_losses[0])
 

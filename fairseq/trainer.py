@@ -181,7 +181,7 @@ class Trainer(object):
 
             # load model parameters
             try:
-                self.get_model().load_state_dict(state['model'], strict=True, args=self.args)
+                self.get_model().load_state_dict(state['model'], strict=False, args=self.args)
                 if utils.has_parameters(self.get_criterion()):
                     self.get_criterion().load_state_dict(state['criterion'], strict=True)
             except Exception:
@@ -330,7 +330,6 @@ class Trainer(object):
 
             if self.fast_stat_sync:
                 self._all_reduce_list[5] += ooms
-
 
         if ooms > 0 and self._oom_batch is not None:
             self.handle_ooms(ooms)
