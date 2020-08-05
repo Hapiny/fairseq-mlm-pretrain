@@ -53,7 +53,6 @@ class MaskedLMTask(FairseqTask):
                             help='sample random replacement words based on word frequencies')
         parser.add_argument('--mask-whole-words', default=False, action='store_true',
                             help='mask whole words; you may also want to set --bpe')
-        parser.add_argument('--cls-loss-alpha', default=0.5, type=float, help='weight in sum MLM loss and CLS loss')
 
     def __init__(self, args, dictionary):
         super().__init__(args)

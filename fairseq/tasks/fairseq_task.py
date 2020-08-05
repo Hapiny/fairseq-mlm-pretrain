@@ -30,6 +30,7 @@ class FairseqTask(object):
         self.args = args
         self.datasets = {}
         self.dataset_to_epoch_iter = {}
+        self.num_updates = 0
 
     @classmethod
     def load_dictionary(cls, filename):
@@ -267,7 +268,7 @@ class FairseqTask(object):
     def update_step(self, num_updates):
         """Task level update when number of update increases. This is called after optimization step and
            learning rate update of each step"""
-        pass
+        self.num_updates = num_updates
 
     def grad_denom(self, sample_sizes, criterion):
         return criterion.__class__.grad_denom(sample_sizes)
